@@ -14,8 +14,9 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+CONFIG += c++11
 
-SOURCES += main.cpp \
+SOURCES += \
     core/utils/visit.cpp \
     core/Ref.cpp \
     core/Node.cpp \
@@ -23,7 +24,16 @@ SOURCES += main.cpp \
     core/utils/Lock.cpp \
     core/utils/Atom.cpp \
     core/utils/Collection.cpp \
-    core/utils/Memory.cpp
+    core/utils/Memory.cpp \
+    core/utils/Time.cpp \
+    core/Director.cpp \
+    project/AppDelegate.cpp \
+    project/main.cpp \
+    core/Application.cpp \
+    base/Sprite.cpp \
+    base/Layer.cpp \
+    core/Scene.cpp \
+    project/HelloScene.cpp
 
 HEADERS += \
     core/utils/visit.h \
@@ -33,4 +43,13 @@ HEADERS += \
     core/utils/Lock.h \
     core/utils/Atom.h \
     core/utils/Collection.h \
-    core/utils/Memory.h
+    core/utils/Memory.h \
+    core/utils/Time.h \
+    core/Director.h \
+    project/AppDelegate.h \
+    rosefinch.h \
+    core/Application.h \
+    base/Sprite.h \
+    base/Layer.h \
+    core/Scene.h \
+    project/HelloScene.h

@@ -12,13 +12,13 @@ public:
     ~MessageQueue(){}
 
     void Put(const T&item){
-        AutoMutex _l(m_Cond.getMutex ());
+        AutoLock _l(m_Cond.getMutex ());
         m_queue.push_back (item);
         m_Cond.notify ();
     }
 
     T& Take(){
-        AutoMutex _l(m_Cond.getMutex ());
+        AutoLock _l(m_Cond.getMutex ());
         // wait, when the queue is empty
         if (m_queue.size ()==0){
             m_Cond.wait ();
@@ -27,6 +27,10 @@ public:
         m_queue.pop_front ();
 
         return front;
+    }
+    size_t size(){
+        AutoLock _l(m_Cond.getMutex ());
+        return m_queue.size ();
     }
 
 private:

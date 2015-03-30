@@ -14,21 +14,21 @@ AtomInt::~AtomInt()
 }
 
 void AtomInt::inc(){
-    AutoSpinLock _l(&lock);
+    AutoLock _l(&lock);
     ++m_value;
 }
 
 void AtomInt::dec(){
-    AutoSpinLock _l(&lock);
+    AutoLock _l(&lock);
     --m_value;
 }
 
 void AtomInt::add(int value){
-    AutoSpinLock _l(&lock);
+    AutoLock _l(&lock);
     m_value += value;
 }
 
-int const AtomInt::get(){
-    AutoSpinLock _l(&lock);
+int AtomInt::get(){
+    AutoLock _l(&lock);
     return m_value;
 }

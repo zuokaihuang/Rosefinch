@@ -3,7 +3,8 @@
 
 using namespace rosefinch;
 
-Mutex::Mutex()
+Mutex::Mutex():
+    Lock()
 {
     pthread_mutex_init(&m_Lock, 0);
 }
@@ -27,6 +28,7 @@ void Mutex::unlock(){
 
 #ifdef __APPLE__
 Spinlock::Spinlock():
+    Lock(),
     m_lock(0)
 {
 }
@@ -84,7 +86,7 @@ void Condition::wait (){
 
 void Condition::wait (unsigned int us){
     time_t sec = us/(1000*1000);
-    time_t usec = us%(1000*1000);
+    int usec = us%(1000*1000);
     const struct timeval timeout= {sec, usec};
 
     struct timeval now;

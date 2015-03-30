@@ -12,7 +12,7 @@ public:
     void inc();
     void dec();
     void add(int value);
-    const int get();
+     int get();
 private:
     int m_value;
     Spinlock lock;

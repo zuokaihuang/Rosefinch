@@ -8,13 +8,35 @@
 #endif
 namespace rosefinch {
 
+class Lock;
+class AutoLock;
+
 class Mutex;
-class AutoMutex;
 class Spinlock;
-class AutoSpinlock;
 class Conditon;
 
-class Mutex
+class Lock{
+public:
+    virtual void lock() = 0;
+    virtual bool trylock()= 0;
+    virtual void unlock() = 0;
+};
+
+class AutoLock{
+public:
+    explicit AutoLock(Lock* lock){
+        this->m_pLock = lock;
+        this->m_pLock->lock ();
+    }
+    ~AutoLock(){
+        m_pLock->unlock ();
+    }
+
+private:
+    Lock* m_pLock;
+};
+
+class Mutex:public Lock
 {
 public:
     Mutex();
@@ -27,22 +49,8 @@ protected:
     pthread_mutex_t m_Lock;
 };
 
-class AutoMutex{
-public:
-    AutoMutex(rosefinch::Mutex* mutex){
-        m_Mutex = mutex;
-        m_Mutex->lock();
-    }
-    ~AutoMutex(){
-        m_Mutex->unlock();
-//        delete m_Mutex;
-//        m_Mutex = 0;
-    }
-private:
-    Mutex* m_Mutex;
-};
 
-class Spinlock
+class Spinlock : public Lock
 {
 public:
     Spinlock();
@@ -58,21 +66,6 @@ private:
 #endif
 };
 
-class AutoSpinLock{
-public:
-    AutoSpinLock(Spinlock* lock){
-        m_Spinlock = lock;
-        m_Spinlock->lock();
-    }
-    ~AutoSpinLock(){
-        m_Spinlock->unlock();
-        delete m_Spinlock;
-        m_Spinlock = 0;
-    }
-private:
-    Spinlock* m_Spinlock;
-};
-// end spinlock
 
 // condition
 class Condition{
@@ -86,7 +79,6 @@ public:
     Mutex* getMutex(){ return &m_Mutex;}
 private:
     pthread_cond_t m_cond;
-//    pthread_mutex_t m_mutex;
     Mutex m_Mutex;
 };
 

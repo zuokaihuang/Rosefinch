@@ -2,22 +2,37 @@
 #define MEMORY_H
 
 #include <assert.h>
+#include <memory>
 
 namespace rosefinch {
 
 #define Assert(cond, msg) assert(cond && msg);
 
-void safefree(void** pp);
-template<typename T>
-inline void safedelete(T pp){
-    Assert(pp!=NULL, "safe delete the pointer can't be null");
-    if (pp != NULL){
-        delete(*pp);
-        *pp = NULL;
+template <typename T>
+class sp{
+public:
+    explicit sp(T** pp){
+        this->m_pp = (void**)pp;
     }
-}
 
-//#define free(e) assert(0 && "free() call not safe, use safefree()");
+    T* operator*(){
+        return get();
+    }
+    T* get(){
+        if (m_pp!=0)
+            return (T*)*m_pp;
+        return 0;
+    }
+    void operator delete (void* ptr){
+        sp* self = (sp*)ptr;
+        delete (T*)*self->m_pp;
+        *self->m_pp = 0;
+    }
+
+//protected:
+    void** m_pp;
+};
+
 
 }
 

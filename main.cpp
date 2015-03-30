@@ -5,6 +5,7 @@
 #include <core/utils/Collection.h>
 #include <pthread.h>
 
+#include <core/Ref.h>
 #include <core/utils/Memory.h>
 
 using namespace rosefinch;
@@ -30,38 +31,30 @@ void * take(void*){
     }
 }
 
-int main(int argc, char *argv[])
+//class Student : public RefBase<Student>{
+//public:
+//    Student():RefBase(){cout << "constructor" << endl;}
+//    virtual ~Student(){cout << "deconstructor" << endl;}
+//    void init(){}
+//};
+
+class Student : public Ref {
+public:
+    Student():Ref(){cout << "constructor" << endl;}
+    virtual ~Student(){cout << "deconstructor" << endl;}
+    void init(){}
+};
+
+class Teacher : public RefBase<Teacher>{
+public:
+    Teacher():RefBase(){cout << "constructor" << endl;}
+    virtual ~Teacher(){cout << "deconstructor" << endl;}
+    void init(){}
+};
+
+int _main(int argc, char *argv[])
 {
     printf("[%d %s]\n", argc, argv[0]);
-
-    {
-        int *val = (int*)malloc(sizeof(int));
-        safefree ((void**)&val);
-        safefree ((void**)&val);
-    }
-
-    {
-        int *val = (int*)malloc(sizeof(int));
-        free(val); // error
-    }
-
-    {
-        int *val = new int;
-        safedelete<int**>(&val);
-    }
-    {
-        int *val = new int;
-//        delete(val); // error
-//        delete val;
-    }
-
-    {
-        int* val = new int[5];
-//        delete(val); // error
-//        delete[] val;
-        safedelete<int*[]>(&val);
-    }
-
 
 //    pthread_t tid_put;
 //    pthread_t tid_take;
@@ -70,6 +63,61 @@ int main(int argc, char *argv[])
 
 //    pthread_join (tid_put, 0);
 //    pthread_join (tid_take, 0);
+
+//{
+////    Student *pStu = Student::create ();
+//    Student *pStu = new Student();
+
+////    RefBase<Student>* refbaic =  pStu;
+////    Ref* ref = pStu;
+
+//    cout << pStu << endl;
+//    AutoRef af;
+//    af.add ((Ref*&)pStu);
+
+//    cout << "hi" << af.size ()<< endl;
+//    af.release ();
+//    cout << af.size ()<< endl;
+
+//    cout << pStu << endl;
+//}
+
+
+//    {
+//    //    Student *pStu = Student::create ();
+//        Student *pStu = new Student();
+
+//    //    RefBase<Student>* refbaic =  pStu;
+//    //    Ref* ref = pStu;
+
+//        sp<Ref>* mSp = new sp<Ref>((Ref**)&pStu);
+
+//        cout << *(*mSp) << endl;
+//        AutoRef af;
+//        af.add_sp (mSp);
+
+//        cout << af.size ()<< endl;
+//        af.release_sp ();
+//        cout << af.size ()<< endl;
+
+//        cout << "delete:" << *(*mSp) << endl;
+//    }
+
+    {
+        Teacher *pStu = Teacher::create ();
+
+        sp<Ref>* mSp = new sp<Ref>((Ref**)&pStu);
+
+        cout << *(*mSp) << endl;
+        AutoRef af;
+        af.add_sp (mSp);
+
+        cout << af.size ()<< endl;
+        af.release_sp ();
+        cout << af.size ()<< endl;
+
+        cout << "delete:" << mSp->get ()<< endl;
+    }
 
     return 0;
 }
